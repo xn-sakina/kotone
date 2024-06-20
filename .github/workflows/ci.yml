@@ -45,20 +45,20 @@ jobs:
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
             build: |
               pnpm build --target x86_64-unknown-linux-gnu
-              strip ${{ env.APP_NAME }}.linux-x64-gnu.node
+              strip kotone.linux-x64-gnu.node
           - host: ubuntu-latest
             target: 'x86_64-unknown-linux-musl'
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
             build: |
               pnpm build
-              llvm-strip -x ${{ env.APP_NAME }}.linux-x64-musl.node
+              llvm-strip -x kotone.linux-x64-musl.node
           - host: ubuntu-latest
             target: 'aarch64-unknown-linux-gnu'
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
             build: |
               rustup target add aarch64-unknown-linux-gnu
               pnpm build --target aarch64-unknown-linux-gnu
-              llvm-strip -x ${{ env.APP_NAME }}.linux-arm64-gnu.node
+              llvm-strip -x kotone.linux-arm64-gnu.node
           - host: ubuntu-latest
             target: 'aarch64-unknown-linux-musl'
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
@@ -124,7 +124,6 @@ jobs:
           run: >-
             ${{ matrix.settings.build }}
 
-
       - name: Build without docker
         if: ${{ !matrix.settings.docker }}
         run: ${{ matrix.settings.build }}
@@ -146,10 +145,10 @@ jobs:
       matrix:
         settings:
           - host: macos-latest
-            target: "x86_64-apple-darwin"
+            target: 'x86_64-apple-darwin'
           - host: windows-latest
-            target: "x86_64-pc-windows-msvc"
-        node: ["18"]
+            target: 'x86_64-pc-windows-msvc'
+        node: ['18']
     runs-on: ${{ matrix.settings.host }}
     steps:
       - uses: actions/checkout@v3
@@ -174,7 +173,7 @@ jobs:
         shell: bash
       - name: Test bindings
         run: pnpm test
-  
+
   test-linux-x64-gnu-binding:
     name: Test bindings on Linux-x64-gnu - node@${{ matrix.node }}
     needs:
@@ -182,7 +181,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: ["18"]
+        node: ['18']
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -200,7 +199,7 @@ jobs:
         shell: bash
       - name: Test bindings
         run: docker run --rm -v $(pwd):/${{ env.APP_NAME }} -w /${{ env.APP_NAME }} node:${{ matrix.node }}-slim sh -c "npm i -g pnpm@8 && pnpm i && pnpm test"
-  
+
   test-linux-x64-musl-binding:
     name: Test bindings on x86_64-unknown-linux-musl - node@${{ matrix.node }}
     needs:
@@ -208,7 +207,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: ["18"]
+        node: ['18']
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -226,7 +225,7 @@ jobs:
         shell: bash
       - name: Test bindings
         run: docker run --rm -v $(pwd):/${{ env.APP_NAME }} -w /${{ env.APP_NAME }} node:${{ matrix.node }}-alpine sh -c "npm i -g pnpm@8 && pnpm i && pnpm test"
-  
+
   test-linux-aarch64-musl-binding:
     name: Test bindings on aarch64-unknown-linux-musl - node@${{ matrix.node }}
     needs:
@@ -234,7 +233,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: ["18"]
+        node: ['18']
     runs-on: ubuntu-latest
     steps:
       - run: docker run --rm --privileged multiarch/qemu-user-static:register --reset
@@ -255,7 +254,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: multiarch/alpine:aarch64-latest-stable
-          options: "-v ${{ github.workspace }}:/build -w /build"
+          options: '-v ${{ github.workspace }}:/build -w /build'
           run: |
             set -e
             apk add nodejs --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/main --allow-untrusted
@@ -312,4 +311,3 @@ jobs:
         run: pnpm release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          
