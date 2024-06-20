@@ -1,7 +1,7 @@
 {
   "name": "kotone",
   "version": "1.0.0",
-  "description": "Transform string to UTF-8 by Rust",
+  "description": "Transform file to UTF-8 by Rust",
   "keywords": [
     "string",
     "rust",

@@ -1,6 +1,6 @@
 # kotone
 
-Transform string to UTF-8 by Rust.
+Transform file to UTF-8 by Rust.
 
 ### Install
 
