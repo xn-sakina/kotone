@@ -10,12 +10,12 @@ license = "MIT"
 crate-type = ["cdylib"]
 
 [dependencies]
-napi = { version = "2.16.6", default-features = false, features = [
+napi = { version = "2.16.8", default-features = false, features = [
     "napi4",
     "error_anyhow",
 ] }
 anyhow = "1.0.86"
-napi-derive = "2.16.5"
+napi-derive = "2.16.9"
 alloc = { path = "./alloc" }
 kotone_transform = { path = "./transform" }
 
