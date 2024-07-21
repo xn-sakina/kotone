@@ -20,6 +20,15 @@ const utf8 = await transform(buffer)
 fs.writeFileSync("file-utf8.txt", utf8, 'utf-8')
 ```
 
+Forced encoding of source code specified:
+
+```ts
+// transform `shift_jis` to `utf-8`
+
+const utf8 = await transform(buffer, 'shift_jis')
+fs.writeFileSync("file-utf8.txt", utf8, 'utf-8')
+```
+
 ### Thanks/Inspiration
 
  - [sjis-utf8](https://github.com/jamesgordo/sjis-utf8): A small Node CLI for converting Shift-JIS encoded file into a UTF-8 encoded file.
