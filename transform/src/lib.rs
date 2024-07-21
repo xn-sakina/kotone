@@ -2,8 +2,8 @@ use anyhow::{Context, Result};
 use chardet::{charset2encoding, detect};
 use encoding_rs::Encoding;
 
-pub fn transform_to_utf8(bytes: &[u8]) -> Result<String> {
-    let detect_encoding = detect(bytes).0;
+pub fn transform_to_utf8(bytes: &[u8], encoding: Option<&str>) -> Result<String> {
+    let detect_encoding = encoding.map_or_else(|| detect(bytes).0, |v| v.to_string());
     let encoding = charset2encoding(&detect_encoding);
     let ins = Encoding::for_label(encoding.as_bytes()).context("Failed to get encoding")?;
     let (cow, _, _) = ins.decode(bytes);

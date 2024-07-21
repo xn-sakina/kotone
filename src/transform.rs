@@ -4,11 +4,12 @@ use napi::{bindgen_prelude::AsyncTask, Env, Task};
 
 pub struct Transform {
     buffer: Box<[u8]>,
+    encoding: Option<String>,
 }
 
 impl Transform {
     pub fn transform(&self) -> Result<String> {
-        transform_to_utf8(&self.buffer)
+        transform_to_utf8(&self.buffer, self.encoding.as_deref())
     }
 }
 
@@ -30,15 +31,16 @@ impl Task for TransformTask {
 }
 
 #[napi]
-pub fn transform_sync(buffer: &[u8]) -> Result<String> {
-    transform_to_utf8(buffer)
+pub fn transform_sync(buffer: &[u8], encoding: Option<&str>) -> Result<String> {
+    transform_to_utf8(buffer, encoding)
 }
 
 #[napi(ts_return_type = "Promise<string>")]
-pub fn transform(buffer: &[u8]) -> AsyncTask<TransformTask> {
+pub fn transform(buffer: &[u8], encoding: Option<&str>) -> AsyncTask<TransformTask> {
     AsyncTask::new(TransformTask {
         task: Transform {
             buffer: buffer.into(),
+            encoding: encoding.map(|s| s.to_string()),
         },
     })
 }
